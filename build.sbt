@@ -19,17 +19,25 @@ inThisBuild(
   )
 )
 
-scalaVersion       := "2.12.20"
+scalaVersion       := "2.13.16"
 crossScalaVersions := Seq("2.12.20", "2.13.15", "3.3.5")
 
 libraryDependencies ++=
   Seq(
     "com.github.ben-manes.caffeine" % "caffeine" % CaffeineVersion.value,
-    "org.scala-lang.modules"  %% "scala-java8-compat" % "1.0.2",
     "com.google.code.findbugs" % "jsr305"             % "3.0.2"  % "provided",
     "org.scalactic"           %% "scalactic"          % "3.2.19" % "test",
     "org.scalatest"           %% "scalatest"          % "3.2.19" % "test"
   )
+
+libraryDependencies ++= {
+  scalaBinaryVersion.value match {
+    case "2.12" =>
+      Seq("org.scala-lang.modules" %% "scala-java8-compat" % "1.0.2")
+    case _ =>
+      Nil
+  }
+}
 
 scalafmtOnCompile := true
 

@@ -7,11 +7,12 @@ import com.github.benmanes.caffeine.cache.stats.StatsCounter
 import java.util
 import java.util.concurrent.{CompletableFuture, Executor}
 import scala.collection.JavaConverters._
-import scala.compat.java8.DurationConverters._
-import scala.compat.java8.FunctionConverters._
-import scala.compat.java8.FutureConverters._
+import scala.jdk.DurationConverters._
+import scala.jdk.FunctionConverters._
+import scala.jdk.FutureConverters._
 import scala.concurrent.Future
 import scala.concurrent.duration._
+import scala.jdk.javaapi.FunctionConverters.asJavaSupplier
 
 object Scaffeine {
 
@@ -565,7 +566,7 @@ case class Scaffeine[K, V](underlying: caffeine.cache.Caffeine[K, V]) {
           ): CompletableFuture[util.Map[K1, V1]] =
             l(keys.asScala.toSet)
               .map(_.asJava)(DirectExecutionContext)
-              .toJava
+              .asJava
               .toCompletableFuture
 
         }

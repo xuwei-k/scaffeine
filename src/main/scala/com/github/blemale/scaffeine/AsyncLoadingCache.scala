@@ -3,7 +3,7 @@ package com.github.blemale.scaffeine
 import com.github.benmanes.caffeine.cache.{AsyncLoadingCache => CaffeineAsyncLoadingCache}
 
 import scala.collection.JavaConverters._
-import scala.compat.java8.FutureConverters._
+import scala.jdk.FutureConverters._
 import scala.concurrent.{ExecutionContext, Future}
 
 object AsyncLoadingCache {
@@ -34,7 +34,7 @@ class AsyncLoadingCache[K, V](
     *   case the mapping is left unestablished
     */
   def get(key: K): Future[V] =
-    underlying.get(key).toScala
+    underlying.get(key).asScala
 
   /** Returns the future of a map of the values associated with `keys`, creating
     * or retrieving those values if necessary. The returned map contains entries
@@ -51,7 +51,7 @@ class AsyncLoadingCache[K, V](
     *   or Error if the `loader` does so
     */
   def getAll(keys: Iterable[K]): Future[Map[K, V]] =
-    underlying.getAll(keys.asJava).toScala.map(_.asScala.toMap)
+    underlying.getAll(keys.asJava).asScala.map(_.asScala.toMap)
 
   /** Returns a view of the entries stored in this cache as a synchronous
     * [[LoadingCache]]. A mapping is not present if the value is currently being

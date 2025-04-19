@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-import static scala.compat.java8.FutureConverters.toJava;
+import static scala.jdk.javaapi.FutureConverters.asJava;
 
 class AsyncCacheLoaderAdapter<K, V> implements AsyncCacheLoader<K, V> {
 
@@ -25,7 +25,7 @@ class AsyncCacheLoaderAdapter<K, V> implements AsyncCacheLoader<K, V> {
   @Nonnull
   @Override
   public CompletableFuture<V> asyncLoad(@Nonnull K key, @Nonnull Executor executor) {
-    return toJava(loader.apply(key)).toCompletableFuture();
+    return asJava(loader.apply(key)).toCompletableFuture();
   }
 
   @Nonnull
@@ -34,7 +34,7 @@ class AsyncCacheLoaderAdapter<K, V> implements AsyncCacheLoader<K, V> {
     if (reloadLoader.isEmpty()) {
       return AsyncCacheLoader.super.asyncReload(key, oldValue, executor);
     } else {
-      return toJava(reloadLoader.get().apply(key, oldValue)).toCompletableFuture();
+      return asJava(reloadLoader.get().apply(key, oldValue)).toCompletableFuture();
     }
   }
 }

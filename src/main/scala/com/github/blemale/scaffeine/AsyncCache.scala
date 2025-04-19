@@ -1,13 +1,13 @@
 package com.github.blemale.scaffeine
 
 import java.util.concurrent.Executor
-
 import com.github.benmanes.caffeine.cache.{AsyncCache => CaffeineAsyncCache}
 
 import scala.collection.JavaConverters._
-import scala.compat.java8.FunctionConverters._
-import scala.compat.java8.FutureConverters._
+import scala.jdk.FunctionConverters._
+import scala.jdk.FutureConverters._
 import scala.concurrent.{ExecutionContext, Future}
+import scala.jdk.javaapi.FunctionConverters.{asJavaBiFunction, asJavaFunction}
 
 object AsyncCache {
 
@@ -30,7 +30,7 @@ class AsyncCache[K, V](val underlying: CaffeineAsyncCache[K, V]) {
     *   mapping for the key
     */
   def getIfPresent(key: K): Option[Future[V]] =
-    Option(underlying.getIfPresent(key)).map(_.toScala)
+    Option(underlying.getIfPresent(key)).map(_.asScala)
 
   /** Returns the future associated with `key` in this cache, obtaining that
     * value from `mappingFunction` if necessary. This method provides a simple
@@ -46,7 +46,7 @@ class AsyncCache[K, V](val underlying: CaffeineAsyncCache[K, V]) {
     *   specified key
     */
   def get(key: K, mappingFunction: K => V): Future[V] =
-    underlying.get(key, asJavaFunction(mappingFunction)).toScala
+    underlying.get(key, asJavaFunction(mappingFunction)).asScala
 
   /** Returns the future associated with `key` in this cache, obtaining that
     * value from `mappingFunction` if necessary. This method provides a simple
@@ -69,10 +69,10 @@ class AsyncCache[K, V](val underlying: CaffeineAsyncCache[K, V]) {
       .get(
         key,
         asJavaBiFunction((k: K, _: Executor) =>
-          mappingFunction(k).toJava.toCompletableFuture
+          mappingFunction(k).asJava.toCompletableFuture
         )
       )
-      .toScala
+      .asScala
 
   /** Returns the future of a map of the values associated with `keys`, creating
     * or retrieving those values if necessary. The returned map contains entries
@@ -105,7 +105,7 @@ class AsyncCache[K, V](val underlying: CaffeineAsyncCache[K, V]) {
           mappingFunction(ks.asScala).asJava
         )
       )
-      .toScala
+      .asScala
       .map(_.asScala.toMap)
 
   /** Returns the future of a map of the values associated with `keys`, creating
@@ -136,10 +136,10 @@ class AsyncCache[K, V](val underlying: CaffeineAsyncCache[K, V]) {
       .getAll(
         keys.asJava,
         asJavaBiFunction((ks: java.lang.Iterable[_ <: K], _: Executor) =>
-          mappingFunction(ks.asScala).map(_.asJava).toJava.toCompletableFuture
+          mappingFunction(ks.asScala).map(_.asJava).asJava.toCompletableFuture
         )
       )
-      .toScala
+      .asScala
       .map(_.asScala.toMap)
 
   /** Associates `value` with `key` in this cache. If the cache previously
@@ -153,7 +153,7 @@ class AsyncCache[K, V](val underlying: CaffeineAsyncCache[K, V]) {
     *   value to be associated with the specified key
     */
   def put(key: K, valueFuture: Future[V]): Unit =
-    underlying.put(key, valueFuture.toJava.toCompletableFuture)
+    underlying.put(key, valueFuture.asJava.toCompletableFuture)
 
   /** Returns a view of the entries stored in this cache as a synchronous
     * [[Cache]]. A mapping is not present if the value is currently being

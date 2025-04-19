@@ -3,7 +3,7 @@ package com.github.blemale.scaffeine
 import com.github.benmanes.caffeine.cache.{LoadingCache => CaffeineLoadingCache}
 
 import scala.collection.JavaConverters._
-import scala.compat.java8.FutureConverters._
+import scala.jdk.FutureConverters._
 import scala.concurrent.Future
 
 object LoadingCache {
@@ -65,7 +65,7 @@ class LoadingCache[K, V](override val underlying: CaffeineLoadingCache[K, V])
     *   key with which a value may be associated
     */
   def refresh(key: K): Future[V] =
-    underlying.refresh(key).toScala
+    underlying.refresh(key).asScala
 
   override def toString = s"LoadingCache($underlying)"
 }

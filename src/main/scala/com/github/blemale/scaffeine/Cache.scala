@@ -4,7 +4,8 @@ import com.github.benmanes.caffeine.cache.stats.CacheStats
 import com.github.benmanes.caffeine.cache.{Cache => CaffeineCache, Policy}
 
 import scala.collection.JavaConverters._
-import scala.compat.java8.FunctionConverters._
+import scala.jdk.FunctionConverters._
+import scala.jdk.javaapi.FunctionConverters.asJavaFunction
 
 object Cache {
 
